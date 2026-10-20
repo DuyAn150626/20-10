@@ -1,305 +1,39 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bức Thư Tình Yêu 20/10</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<!-- Khung màn hình ứng dụng chính -->
+<div id="app-container">
+    <!-- Tiêu đề lấp lánh phía trên -->
+    <div class="header-title">Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10</div>
 
-        body {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: radial-gradient(circle, #320a36 0%, #0d0112 100%);
-            overflow: hidden;
-            perspective: 1200px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+    <!-- MÀN CHUYỂN CẢNH 1: Đóa hoa 3D tỏa sáng & Bung nở Album ảnh -->
+    <div id="scene-bloom" class="active-layer">
+        <canvas id="flower-canvas"></canvas>
+        <div id="photo-album-3d" class="album-container">
+            <!-- Album 3D hình hộp xoay vòng chứa các lời chúc nhỏ (nhấp chuột để đổi) -->
+            <div class="card-item-3d active" data-index="0">Mong album ảnh của chị ngày càng xịn 💕</div>
+            <div class="card-item-3d" data-index="1">Chúc chị ngủ ngon, ngủ rồi thì có một giấc ngủ ngon nha 😴</div>
+            <div class="card-item-3d" data-index="2">Mong chị luôn bình an và sức khỏe mạnh 💪</div>
+            <div class="card-item-3d" data-index="3">Chị nhớ chăm sóc tốt cho bản thân nhé, đừng lười ăn đấy 🍲</div>
+        </div>
+        <button id="btn-next-scene" class="nav-button">Mở thư chúc mừng 20/10 ➔</button>
+    </div>
 
-        /* Hướng dẫn lấp lánh trên cùng */
-        .instruction {
-            position: absolute;
-            top: 40px;
-            width: 100%;
-            text-align: center;
-            color: #ffb3d1;
-            font-size: 1.2rem;
-            font-weight: 500;
-            z-index: 100;
-            text-shadow: 0 0 15px rgba(255, 75, 145, 0.7);
-            animation: pulseText 2s infinite alternate;
-            pointer-events: none;
-        }
+    <!-- MÀN CHUYỂN CẢNH 2: Bức thư 3D tự lật và Hiệu ứng gõ chữ nghệ thuật -->
+    <div id="scene-letter" class="hidden-layer">
+        <div class="envelope-wrapper" id="envelope">
+            <div class="envelope-back"></div>
+            <div class="envelope-flap"></div>
+            <!-- Ruột thư chứa hiệu ứng máy đánh chữ gõ tự động -->
+            <div class="letter-paper">
+                <div class="letter-avatar">🐱</div>
+                <h3 class="letter-title">Chúc mừng ngày 20/10</h3>
+                <div id="typewriter-text" class="text-content"></div>
+                <button id="btn-restart" class="nav-button-sub">↩ Đọc lại từ đầu</button>
+            </div>
+            <div class="envelope-front"></div>
+        </div>
+    </div>
+</div>
 
-        @keyframes pulseText {
-            0% { transform: scale(0.96); opacity: 0.7; }
-            100% { transform: scale(1.04); opacity: 1; }
-        }
-
-        /* KHUNG CHỨA BAO THƯ & BÓ HOA NỞ 3D */
-        .envelope-container {
-            position: relative;
-            width: 320px;
-            height: 220px;
-            transform-style: preserve-3d;
-            transform: rotateX(15deg);
-            transition: transform 1.5s ease;
-            cursor: pointer;
-        }
-
-        /* Thân sau bao thư */
-        .envelope-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: #ff75a0;
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            z-index: 1;
-        }
-
-        /* Nắp thư 3D gập chéo */
-        .envelope-flap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-left: 160px solid transparent;
-            border-right: 160px solid transparent;
-            border-top: 115px solid #ff4b91;
-            transform-origin: top;
-            transition: transform 1s ease;
-            z-index: 10;
-        }
-
-        /* Mặt trước bao thư gập chéo đè lên */
-        .envelope-front {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-left: 160px solid #ff85a9;
-            border-right: 160px solid #ff85a9;
-            border-bottom: 120px solid #ff5a8d;
-            border-radius: 0 0 15px 15px;
-            z-index: 5;
-        }
-
-        /* BÓ HOA GIẤU TRONG BAO THƯ */
-        .bouquet {
-            position: absolute;
-            bottom: 10px;
-            left: 60px;
-            width: 200px;
-            height: 200px;
-            transform: translateY(0) scale(0.2);
-            opacity: 0;
-            transition: transform 2s cubic-bezier(0.1, 0.8, 0.3, 1) 0.5s, opacity 1s ease 0.5s;
-            z-index: 3;
-            transform-style: preserve-3d;
-        }
-
-        /* Giấy gói hoa hình nón */
-        .flower-wrap {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 50px solid transparent;
-            border-right: 50px solid transparent;
-            border-bottom: 120px solid #ffb3c6;
-            z-index: 11;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
-        }
-
-        /* KHUNG CHỨA CÁC BÔNG HOA ĐỂ TỰ ĐỘNG XOÈ CÁNH */
-        .flower-cluster {
-            position: absolute;
-            top: 20px;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            z-index: 12;
-            transform-style: preserve-3d;
-        }
-
-        /* ĐỊNH DẠNG CƠ BẢN CỦA MỘT BÔNG HOA HỒNG 3D */
-        .rose-flower {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            transform-style: preserve-3d;
-        }
-
-        /* BÔNG HỒNG ĐỎ RỰC RỠ CHÍNH GIỮA */
-        .rose-center {
-            top: 10px;
-            left: 70px;
-            z-index: 20;
-            transform: scale(1.1);
-        }
-
-        /* Các bông hồng hồng xung quanh làm nền */
-        .rose-left { top: 25px; left: 20px; transform: rotateZ(-15deg); }
-        .rose-right { top: 25px; left: 120px; transform: rotateZ(15deg); }
-
-        /* CÁC LỚP CÁNH HOA HỒNG (BAN ĐẦU KHÉP CHẶT TỶ LỆ = 0) */
-        .petal-layer {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            border-radius: 50% 50% 45% 45%;
-            transform-origin: bottom center;
-            transition: transform 2.5s cubic-bezier(0.1, 0.8, 0.2, 1) 1.5s; /* Thời gian xòe cánh hoa */
-        }
-
-        /* Cấu hình các lớp cánh của Hoa Hồng Đỏ (Trung tâm) */
-        .rose-center .layer-outer {
-            width: 50px; height: 50px; margin-top: -25px; margin-left: -25px;
-            background: #be0f34; border: 1px solid #900a22;
-            transform: scale(0); /* Giấu khép cánh */
-        }
-        .rose-center .layer-mid {
-            width: 36px; height: 36px; margin-top: -18px; margin-left: -18px;
-            background: #dc143c;
-            transform: scale(0);
-        }
-        .rose-center .layer-core {
-            width: 20px; height: 20px; margin-top: -10px; margin-left: -10px;
-            background: #ff2a55; box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
-            transform: scale(0);
-        }
-
-        /* Cấu hình các lớp cánh của Hoa Hồng Hồng (Xung quanh) */
-        .rose-pink .layer-outer {
-            width: 45px; height: 45px; margin-top: -22.5px; margin-left: -22.5px;
-            background: #ff529a; transform: scale(0);
-        }
-        .rose-pink .layer-mid {
-            width: 32px; height: 32px; margin-top: -16px; margin-left: -16px;
-            background: #ff69b4; transform: scale(0);
-        }
-        .rose-pink .layer-core {
-            width: 18px; height: 18px; margin-top: -9px; margin-left: -9px;
-            background: #ffb3d1; transform: scale(0);
-        }
-
-        /* --- KHI BẤM KÍCH HOẠT MỞ THƯ -> HOA TRỒI VÀ TỰ ĐỘNG BẮT ĐẦU NỞ CÁNH --- */
-        .envelope-container.open .envelope-flap {
-            transform: rotateX(180deg);
-            z-index: 0;
-        }
-
-        .envelope-container.open .bouquet {
-            transform: translateY(-160px) scale(1.6) translateZ(60px);
-            opacity: 1;
-        }
-
-        /* Lệnh kích hoạt bung mở các cánh hoa từng tầng lớp mượt mà */
-        .envelope-container.open .layer-outer {
-            transform: scale(1) rotate(15deg);
-        }
-        .envelope-container.open .layer-mid {
-            transform: scale(1) rotate(-20deg);
-        }
-        .envelope-container.open .layer-core {
-            transform: scale(1);
-        }
-
-        /* BƯỚC CUỐI: PHÓNG TO TOÀN BỘ SÁT CAMERA KHI ĐÃ NỞ TRỌN VẸN */
-        .envelope-container.zoom {
-            transform: rotateX(8deg) scale(1.15) translateY(-10px);
-        }
-        .envelope-container.zoom .bouquet {
-            transform: translateY(-170px) scale(1.9) translateZ(120px);
-            animation: pulseBouquet 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes pulseBouquet {
-            0% { filter: drop-shadow(0 10px 15px rgba(220, 20, 60, 0.3)); }
-            100% { filter: drop-shadow(0 20px 35px rgba(220, 20, 60, 0.7)); }
-        }
-
-        /* THIỆP KÍNH LỜI CHÚC (GLASSMORPHISM) */
-        .wishes-card {
-            position: absolute;
-            bottom: 5%;
-            left: 50%;
-            transform: translateX(-50%) scale(0);
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 179, 209, 0.3);
-            border-radius: 24px;
-            padding: 25px 30px;
-            width: 90%;
-            max-width: 460px;
-            color: #fff;
-            text-align: center;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-            z-index: 200;
-            opacity: 0;
-            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.2) 0.5s;
-            pointer-events: none;
-        }
-
-        .wishes-card.show {
-            transform: translateX(-50%) scale(1);
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .wishes-card h2 {
-            color: #ff4b91;
-            font-size: 1.8rem;
-            margin-bottom: 12px;
-            text-shadow: 0 0 15px rgba(255, 75, 145, 0.5);
-        }
-
-        .wishes-card p {
-            font-size: 1.05rem;
-            line-height: 1.6;
-            color: #ffe6f0;
-        }
-
-        /* HIỆU ỨNG CÁNH HOA ĐÀO RƠI TRÊN NỀN */
-        .petal {
-            position: absolute;
-            background: linear-gradient(135deg, #ffb3d1, #ff69b4);
-            border-radius: 150px 0 150px 150px;
-            opacity: 0.65;
-            pointer-events: none;
-            animation: fallAndSpin linear infinite;
-        }
-
-        @keyframes fallAndSpin {
-            0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.65; }
-            90% { opacity: 0.65; }
-            100% { transform: translateY(110vh) translateX(80px) rotate(540deg); opacity: 0; }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="instruction" id="guide">✉️ Hãy chạm vào bức thư màu hồng để nhận điều bất ngờ 🌸</div>
-
-    <!-- Khối không gian 3D chứa bao thư và cụm hoa nở -->
-    <div class="envelope-container" id="envelope-box">
-        <div class="envelope-back"></div>
-        <div class="envelope-flap"></div>
-        
-        <!-- Bó hoa nghệ thuật tự mở cánh -->
-        <div class="bouquet" id="flower-bouquet">
-            <div class="flower-cluster">
-                <!-- Hoa hồng trái -->
+<!-- Hệ thống âm thanh nền tích hợp sẵn như video -->
+<audio id="bg-audio" loop preload="auto">
+    <source src="https://soundhelix.com" type="audio/mp3">
+</audio>
