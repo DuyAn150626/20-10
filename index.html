@@ -1,39 +1,55 @@
-<!-- Khung màn hình ứng dụng chính -->
-<div id="app-container">
-    <!-- Tiêu đề lấp lánh phía trên -->
-    <div class="header-title">Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10</div>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10</title>
+    <!-- LIÊN KẾT ĐẾN FILE STYLE.CSS CỦA BẠN -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-    <!-- MÀN CHUYỂN CẢNH 1: Đóa hoa 3D tỏa sáng & Bung nở Album ảnh -->
-    <div id="scene-bloom" class="active-layer">
-        <canvas id="flower-canvas"></canvas>
-        <div id="photo-album-3d" class="album-container">
-            <!-- Album 3D hình hộp xoay vòng chứa các lời chúc nhỏ (nhấp chuột để đổi) -->
-            <div class="card-item-3d active" data-index="0">Mong album ảnh của chị ngày càng xịn 💕</div>
-            <div class="card-item-3d" data-index="1">Chúc chị ngủ ngon, ngủ rồi thì có một giấc ngủ ngon nha 😴</div>
-            <div class="card-item-3d" data-index="2">Mong chị luôn bình an và sức khỏe mạnh 💪</div>
-            <div class="card-item-3d" data-index="3">Chị nhớ chăm sóc tốt cho bản thân nhé, đừng lười ăn đấy 🍲</div>
-        </div>
-        <button id="btn-next-scene" class="nav-button">Mở thư chúc mừng 20/10 ➔</button>
-    </div>
+    <div class="instruction" id="guide">✉️ Hãy chạm vào bức thư màu hồng để mở điều bất ngờ 🌸</div>
 
-    <!-- MÀN CHUYỂN CẢNH 2: Bức thư 3D tự lật và Hiệu ứng gõ chữ nghệ thuật -->
-    <div id="scene-letter" class="hidden-layer">
-        <div class="envelope-wrapper" id="envelope">
-            <div class="envelope-back"></div>
-            <div class="envelope-flap"></div>
-            <!-- Ruột thư chứa hiệu ứng máy đánh chữ gõ tự động -->
-            <div class="letter-paper">
-                <div class="letter-avatar">🐱</div>
-                <h3 class="letter-title">Chúc mừng ngày 20/10</h3>
-                <div id="typewriter-text" class="text-content"></div>
-                <button id="btn-restart" class="nav-button-sub">↩ Đọc lại từ đầu</button>
+    <!-- Không gian chứa thư và hiệu ứng nở hoa -->
+    <div class="envelope-container" id="envelope-box">
+        <div class="envelope-back"></div>
+        <div class="envelope-flap"></div>
+        
+        <!-- Bó hoa giấu kín ban đầu -->
+        <div class="bouquet-box">
+            <!-- Giấy gói hoa hình nón -->
+            <div class="cone-wrap"></div>
+            
+            <!-- Cụm hoa tự động bung nở từng bông -->
+            <div class="flowers-cluster">
+                <div class="flower fl1"></div>
+                <div class="flower fl2"></div>
+                <div class="flower fl3"></div>
+                <div class="flower fl4"></div>
+                <div class="flower fl5"></div>
+                <!-- Bông hồng đỏ thắm nở to nhất ở chính giữa -->
+                <div class="red-rose" id="center-rose">
+                    <div class="rose-core"></div>
+                </div>
             </div>
-            <div class="envelope-front"></div>
         </div>
+        
+        <div class="envelope-front"></div>
     </div>
-</div>
 
-<!-- Hệ thống âm thanh nền tích hợp sẵn như video -->
-<audio id="bg-audio" loop preload="auto">
-    <source src="https://soundhelix.com" type="audio/mp3">
-</audio>
+    <!-- Khung kính mờ chứa lời chúc hiển thị cuối cùng -->
+    <div class="wishes-card" id="wishes-box">
+        <h2>Happy 20/10! 💐</h2>
+        <p>Chúc người phụ nữ tuyệt vời luôn rạng rỡ, kiêu sa như đóa hồng đỏ thắm, tràn đầy niềm vui, hạnh phúc và luôn nhận được sự trân trọng, yêu thương trọn vẹn mỗi ngày!</p>
+    </div>
+
+    <!-- Âm thanh nền lãng mạn nhẹ nhàng -->
+    <audio id="bg-audio" loop preload="auto">
+        <source src="https://soundhelix.com" type="audio/mp3">
+    </audio>
+
+    <!-- LIÊN KẾT ĐẾN FILE SCRIPT.JS CỦA BẠN -->
+    <script src="script.js"></script>
+</body>
+</html>
