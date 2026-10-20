@@ -2,110 +2,44 @@ body {
     margin: 0 !important;
     padding: 0 !important;
     height: 100vh;
-    background: #0d0112 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle, #320a36 0%, #0d0112 100%) !important;
     overflow: hidden;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     perspective: 1200px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    user-select: none;
 }
 
-#app-container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.header-title {
+/* Chữ hướng dẫn lấp lánh */
+.instruction {
     position: absolute;
-    top: 25px;
-    font-size: 1.4rem;
-    color: #ffb3d1;
-    text-shadow: 0 0 15px rgba(255, 75, 145, 0.7);
-    z-index: 50;
-    font-weight: 600;
-}
-
-/* Xử lý các tầng chuyển cảnh ảo */
-.active-layer { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; }
-.hidden-layer { display: none; width: 100%; height: 100%; align-items: center; justify-content: center; }
-
-/* CANVAS 3D FLOWER */
-#flower-canvas {
-    width: 320px;
-    height: 320px;
-    cursor: pointer;
-    filter: drop-shadow(0 0 20px rgba(255, 105, 180, 0.5));
-    transition: transform 0.5s ease;
-}
-
-/* ALBUM XOAY CHUYỂN CẢNH */
-.album-container {
-    margin-top: 20px;
-    position: relative;
-    width: 320px;
-    height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.card-item-3d {
-    position: absolute;
-    width: 90%;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 182, 193, 0.3);
-    padding: 15px;
-    border-radius: 12px;
+    top: 40px;
+    width: 100%;
     text-align: center;
-    font-size: 0.95rem;
-    color: #ffe6f0;
-    opacity: 0;
-    transform: scale(0.8) translateY(20px);
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #ffb3d1;
+    font-size: 1.1rem;
+    z-index: 100;
+    text-shadow: 0 0 15px rgba(255, 75, 145, 0.7);
+    animation: pulseText 2s infinite alternate;
     pointer-events: none;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
 
-.card-item-3d.active {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-    pointer-events: auto;
+@keyframes pulseText {
+    0% { transform: scale(0.97); opacity: 0.7; }
+    100% { transform: scale(1.03); opacity: 1; }
 }
 
-/* NÚT ĐIỀU HƯỚNG SANG TRỌNG */
-.nav-button {
-    margin-top: 30px;
-    background: linear-gradient(135deg, #ff4b91 0%, #ff75a0 100%);
-    border: none;
-    padding: 12px 28px;
-    color: white;
-    font-size: 1rem;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 600;
-    box-shadow: 0 5px 15px rgba(255, 75, 145, 0.4);
-    transition: all 0.3s ease;
-    z-index: 60;
-}
-.nav-button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 75, 145, 0.6); }
-
-/* KHUNG BAO THƯ 3D */
-.envelope-wrapper {
+/* KHUNG 3D CHỨA THƯ */
+.envelope-container {
     position: relative;
-    width: 340px;
-    height: 220px;
+    width: 320px;
+    height: 210px;
     transform-style: preserve-3d;
-    transform: rotateX(10deg);
-    transition: transform 1.2s cubic-bezier(0.2, 1, 0.2, 1);
+    transform: rotateX(12deg);
+    transition: transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+    cursor: pointer;
 }
 
 .envelope-back {
@@ -114,88 +48,187 @@ body {
     height: 100%;
     background: #ff75a0;
     border-radius: 0 0 12px 12px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.5);
     z-index: 1;
 }
 
 .envelope-flap {
     position: absolute;
-    top: 0; left: 0; width: 0; height: 0;
-    border-left: 170px solid transparent;
-    border-right: 170px solid transparent;
-    border-top: 115px solid #ff4b91;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 160px solid transparent;
+    border-right: 160px solid transparent;
+    border-top: 110px solid #ff4b91;
     transform-origin: top;
-    transition: transform 0.8s ease 0.2s, z-index 0.1s ease 0.6s;
+    transition: transform 0.8s ease, z-index 0.1s ease 0.4s;
     z-index: 10;
 }
 
 .envelope-front {
     position: absolute;
-    bottom: 0; left: 0; width: 0; height: 0;
-    border-left: 170px solid #ff85a9;
-    border-right: 170px solid #ff85a9;
-    border-bottom: 120px solid #ff5a8d;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 160px solid #ff85a9;
+    border-right: 160px solid #ff85a9;
+    border-bottom: 115px solid #ff5a8d;
     border-radius: 0 0 12px 12px;
     z-index: 5;
 }
 
-/* GIẤY THƯ TRỒI LÊN VÀ HIỆN MÁY CHỮ */
-.letter-paper {
+/* BÓ HOA GIẤU KÍN */
+.bouquet-box {
     position: absolute;
-    bottom: 10px;
-    left: 15px;
-    width: 310px;
-    min-height: 200px;
-    background: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    color: #333;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.2);
+    width: 200px;
+    height: 250px;
+    opacity: 0;
+    transition: transform 1.8s cubic-bezier(0.1, 1, 0.3, 1) 0.3s, opacity 1s ease 0.3s;
     z-index: 3;
-    transform: translateY(0) scale(0.95);
-    transition: transform 1.2s cubic-bezier(0.1, 1, 0.2, 1) 0.6s, z-index 0.1s ease 0.8s;
+    transform-style: preserve-3d;
+}
+
+/* Giấy gói nón lụa */
+.cone-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 140px;
+    background: linear-gradient(135deg, #ffccd8, #ff85a9);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    z-index: 4;
+}
+
+/* Cụm chứa các bông hoa để nở */
+.flowers-cluster {
+    position: absolute;
+    top: 20px;
+    width: 100%;
+    height: 120px;
+    z-index: 6;
+}
+
+/* Các bông hoa hồng nền */
+.flower {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle, #ff8dc4 30%, #ff4fa1 100%);
+    border-radius: 50%;
+    box-shadow: inset 0 0 12px rgba(0,0,0,0.25), 0 4px 10px rgba(0,0,0,0.15);
+    transform: scale(0);
+    transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.fl1 { top: 20px; left: 15px; transition-delay: 1.2s; }
+.fl2 { top: -5px; left: 50px; transition-delay: 1.4s; }
+.fl3 { top: 15px; right: 15px; transition-delay: 1.6s; }
+.fl4 { top: 45px; left: 30px; transition-delay: 1.8s; }
+.fl5 { top: 40px; right: 30px; transition-delay: 2.0s; }
+
+/* ĐÓA HỒNG ĐỎ TRUNG TÂM */
+.red-rose {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    width: 70px;
+    height: 70px;
+    background: radial-gradient(circle, #ff2a55 20%, #b30024 100%);
+    border-radius: 50%;
+    z-index: 10;
+    box-shadow: 0 8px 20px rgba(220, 20, 60, 0.5), inset 0 0 20px rgba(0,0,0,0.4);
+    transition: transform 2s cubic-bezier(0.175, 0.885, 0.4, 1.3) 2.2s;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
 }
 
-.letter-avatar { font-size: 2.5rem; margin-bottom: 5px; }
-.letter-title { color: #ff4b91; margin: 5px 0 10px 0; font-size: 1.15rem; }
-
-.text-content {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: #555;
-    text-align: left;
-    width: 100%;
-    min-height: 80px;
-    white-space: pre-line;
+.rose-core {
+    width: 30px;
+    height: 30px;
+    background: #80001a;
+    border-radius: 50%;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.6);
 }
 
-.nav-button-sub {
-    background: none; border: 1px solid #ff75a0; color: #ff75a0;
-    padding: 5px 12px; font-size: 0.8rem; border-radius: 15px;
-    cursor: pointer; margin-top: 10px; font-weight: 500; opacity: 0;
-    transition: opacity 0.5s ease;
+/* --- TRẠNG THÁI HIỆU ỨNG ĐỘNG --- */
+.envelope-container.open .envelope-flap {
+    transform: rotateX(180deg);
+    z-index: 0;
 }
 
-/* KÍCH HOẠT HIỆU ỨNG TƯƠNG TÁC THƯ */
-.envelope-wrapper.open .envelope-flap { transform: rotateX(180deg); z-index: 0; }
-.envelope-wrapper.open .letter-paper { transform: translateY(-130px) scale(1.05); z-index: 15; }
+.envelope-container.open .bouquet-box {
+    transform: translateX(-50%) translateY(-170px) scale(1.6) translateZ(60px);
+    opacity: 1;
+}
 
-/* HẠT HOA BAY TRÊN NỀN */
+.envelope-container.open .flower {
+    transform: scale(1);
+}
+
+.envelope-container.open .red-rose {
+    transform: translateX(-50%) scale(1);
+    animation: floatRose 3s ease-in-out infinite alternate 4s;
+}
+
+@keyframes floatRose {
+    0% { box-shadow: 0 8px 20px rgba(220, 20, 60, 0.5); }
+    100% { box-shadow: 0 10px 35px rgba(220, 20, 60, 0.9); transform: translateX(-50%) scale(1.06); }
+}
+
+/* HIỂN THỊ TẤM THIỆP */
+.wishes-card {
+    position: absolute;
+    bottom: 6%;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 179, 209, 0.25);
+    border-radius: 22px;
+    padding: 25px 30px;
+    width: 88%;
+    max-width: 440px;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    z-index: 200;
+    opacity: 0;
+    transition: all 1.2s cubic-bezier(0.15, 1, 0.3, 1) 3s;
+    pointer-events: none;
+}
+
+.wishes-card.show {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.wishes-card h2 { color: #ff4b91; font-size: 1.8rem; margin-bottom: 12px; }
+.wishes-card p { font-size: 1rem; line-height: 1.6; color: #ffe6f0; }
+
+/* CÁNH HOA ĐÀO RƠI TRÊN NỀN */
 .petal {
     position: absolute;
     background: linear-gradient(135deg, #ffccd8, #ff69b4);
-    border-radius: 150px 0 150px 150px;
-    opacity: 0.6;
+    border-radius: 120px 0 120px 120px;
+    opacity: 0.65;
     pointer-events: none;
-    animation: dropFall linear infinite;
+    animation: fallAndSpin linear infinite;
 }
 
-@keyframes dropFall {
-    0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+@keyframes fallAndSpin {
+    0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
     10% { opacity: 0.7; }
     90% { opacity: 0.7; }
-    100% { transform: translateY(110vh) rotate(540deg); opacity: 0; }
+    100% { transform: translateY(110vh) translateX(80px) rotate(540deg); opacity: 0; }
 }
